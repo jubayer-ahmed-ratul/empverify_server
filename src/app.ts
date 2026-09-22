@@ -39,12 +39,12 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.set('trust proxy', 1);
 
 // Health check - no rate limit
-app.get('/api/health', (req: Request, res: Response) => {
+app.get('/api/health', (_req: Request, res: Response) => {
   successResponse(res, { status: 'healthy' }, 'Service is healthy', 200);
 });
 
 // Health check with database
-app.get('/api/health/db', async (req: Request, res: Response) => {
+app.get('/api/health/db', async (_req: Request, res: Response) => {
   try {
     const { prisma } = await import('./config/database');
     await prisma.$queryRaw`SELECT 1`;

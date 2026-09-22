@@ -4,7 +4,7 @@ import { successResponse } from '../utils/response';
 import { AuthRequest } from '../middleware/auth.middleware';
 
 export class DashboardController {
-  async getSummary(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+  async getSummary(_req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const summary = await dashboardService.getSummary();
       successResponse(res, summary, 'Dashboard summary retrieved successfully', 200);
@@ -42,7 +42,7 @@ export class DashboardController {
     }
   }
 
-  async getDepartmentStats(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+  async getDepartmentStats(_req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const stats = await dashboardService.getDepartmentStats();
       successResponse(res, stats, 'Department statistics retrieved successfully', 200);
