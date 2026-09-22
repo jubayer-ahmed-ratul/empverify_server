@@ -23,7 +23,7 @@ export class AuthController {
     }
   }
 
-  async logout(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+  async logout(_req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       // For JWT, logout is handled client-side by removing the token
       // Optionally create audit log
