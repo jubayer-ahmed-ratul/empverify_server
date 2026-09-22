@@ -1,7 +1,6 @@
 import express, { Application, Request, Response } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
-import compression from 'compression';
 import { env } from './config/env';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { successResponse } from './utils/response';
@@ -26,9 +25,6 @@ app.use(
     credentials: true,
   })
 );
-
-// Compression
-app.use(compression());
 
 // Body parser
 app.use(express.json({ limit: '10mb' }));
@@ -61,7 +57,7 @@ app.get('/api/health/db', async (req: Request, res: Response) => {
   }
 });
 
-// Routes (no rate limiting middleware to avoid type conflicts)
+// Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);
 app.use('/api/verify', verificationRoutes);
