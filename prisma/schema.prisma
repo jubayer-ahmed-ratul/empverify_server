@@ -1,0 +1,124 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AdminRole {
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum VerificationResult {
+  VALID
+  INACTIVE
+  SUSPENDED
+  EXPIRED
+  INVALID_TOKEN
+}
+
+enum AuditAction {
+  LOGIN
+  LOGOUT
+  CREATE_EMPLOYEE
+  UPDATE_EMPLOYEE
+  DELETE_EMPLOYEE
+  ACTIVATE_EMPLOYEE
+  DEACTIVATE_EMPLOYEE
+  SUSPEND_EMPLOYEE
+  REGENERATE_QR
+  UPLOAD_PHOTO
+}
+
+model Admin {
+  id           String      @id @default(uuid())
+  name         String
+  email        String      @unique
+  passwordHash String
+  role         AdminRole   @default(ADMIN)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  auditLogs    AuditLog[]
+
+  @@index([email])
+  @@map("admins")
+}
+
+model Employee {
+  id                 String             @id @default(uuid())
+  employeeId         String             @unique
+  fullName           String
+  email              String?
+  phone              String?
+  photoUrl           String?
+  photoPublicId      String?
+  position           String
+  department         String
+  companyName        String
+  joiningDate        DateTime
+  idGenerationDate   DateTime           @default(now())
+  idExpiryDate       DateTime
+  status             EmployeeStatus     @default(ACTIVE)
+  verificationToken  String             @unique
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  deletedAt          DateTime?
+  verificationLogs   VerificationLog[]
+
+  @@index([employeeId])
+  @@index([verificationToken])
+  @@index([status])
+  @@index([department])
+  @@index([position])
+  @@index([createdAt])
+  @@index([idExpiryDate])
+  @@index([deletedAt])
+  @@index([fullName])
+  @@map("employees")
+}
+
+model VerificationLog {
+  id         String             @id @default(uuid())
+  employeeId String
+  employee   Employee           @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  verifiedAt DateTime           @default(now())
+  result     VerificationResult
+  ipAddress  String?
+  userAgent  String?
+
+  @@index([employeeId])
+  @@index([verifiedAt])
+  @@index([result])
+  @@map("verification_logs")
+}
+
+model AuditLog {
+  id         String      @id @default(uuid())
+  adminId    String
+  admin      Admin       @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  action     AuditAction
+  entityType String
+  entityId   String?
+  metadata   Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime    @default(now())
+
+  @@index([adminId])
+  @@index([action])
+  @@index([createdAt])
+  @@index([entityType, entityId])
+  @@map("audit_logs")
+}
