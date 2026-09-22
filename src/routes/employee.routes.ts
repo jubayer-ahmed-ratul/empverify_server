@@ -16,7 +16,7 @@ router.use(authenticate);
 
 router.post(
   '/',
-  upload.single('photo'),
+  upload.single('photo') as any,
   validate(createEmployeeSchema),
   employeeController.create
 );
@@ -27,7 +27,7 @@ router.get('/:id', employeeController.getById);
 
 router.patch(
   '/:id',
-  upload.single('photo'),
+  upload.single('photo') as any,
   validate(updateEmployeeSchema),
   employeeController.update
 );

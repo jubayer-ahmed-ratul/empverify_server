@@ -1,10 +1,9 @@
 import multer from 'multer';
-import { Request } from 'express';
 
 const storage = multer.memoryStorage();
 
 const fileFilter = (
-  req: Request,
+  req: any,
   file: Express.Multer.File,
   cb: multer.FileFilterCallback
 ) => {

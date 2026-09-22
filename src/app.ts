@@ -63,7 +63,7 @@ app.get('/api/health/db', async (req: Request, res: Response) => {
 });
 
 // Apply rate limiting to API routes
-app.use('/api', apiLimiter);
+app.use('/api', apiLimiter as any);
 
 // Routes
 app.use('/api/auth', authRoutes);
