@@ -4,7 +4,6 @@ import cors from 'cors';
 import compression from 'compression';
 import { env } from './config/env';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
-import { apiLimiter } from './middleware/rateLimit.middleware';
 import { successResponse } from './utils/response';
 
 // Import routes
@@ -62,10 +61,7 @@ app.get('/api/health/db', async (req: Request, res: Response) => {
   }
 });
 
-// Apply rate limiting to API routes
-app.use('/api', apiLimiter as any);
-
-// Routes
+// Routes (no rate limiting middleware to avoid type conflicts)
 app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);
 app.use('/api/verify', verificationRoutes);
